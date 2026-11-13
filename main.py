@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord.ui import View, Modal, TextInput
 
 TOKEN = os.getenv("TOKEN") or os.getenv("DISCORD_TOKEN")
-FORUM_CHANNEL_ID = 123456789 # <-- METTI QUI L'ID DEL TUO CANALE FORUM
+FORUM_CHANNEL_ID = 1570920876591808693
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -16,7 +16,7 @@ async def get_roblox_info(username):
             if not data.get("data"): return None
             user = data["data"][0]
             uid = user["id"]
-        async with s.get(f"https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds={uid}&size=150x150&format=Png&isCircular=false") as r:
+        async with s.get(f"https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds={uid}&size=420x420&format=Png&isCircular=false") as r:
             thumb = await r.json()
             avatar = thumb["data"][0]["imageUrl"]
             return user["name"], user["displayName"], avatar, f"https://www.roblox.com/users/{uid}/profile"
@@ -39,7 +39,7 @@ class BanWarnModal(Modal):
         name, display, avatar, link = info
         forum = bot.get_channel(FORUM_CHANNEL_ID)
         if forum is None:
-            await interaction.followup.send("❌ Canale forum non trovato! Controlla l'ID!", ephemeral=True)
+            await interaction.followup.send("❌ Canale forum non trovato!", ephemeral=True)
             return
         colore = discord.Color.red() if self.tipo=="BAN" else discord.Color.orange()
         embed = discord.Embed(title=f"{'🚫 BAN' if self.tipo=='BAN' else '⚠️ WARN'} - {display} (@{name})", description=f"**Motivo:** {self.motivo.value}\n**Staff:** {interaction.user.mention}\n**Profilo:** [Clicca qui]({link})", color=colore)
